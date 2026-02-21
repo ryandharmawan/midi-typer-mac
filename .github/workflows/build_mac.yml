@@ -1,0 +1,20 @@
+name: Build Mac App
+on: [push]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    - name: Install Dependencies
+      run: pip install pyinstaller midiutil
+    - name: Build Mac App
+      run: python3 -m PyInstaller --windowed --onefile --name "Type_Text_To_Midi" type_text_to_midi_pro.py
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Mac-App-Download
+        path: dist/Type_Text_To_Midi.app
