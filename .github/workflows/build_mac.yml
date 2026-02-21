@@ -1,20 +1,27 @@
 name: Build Mac App
-on: [push]
+on: [push, workflow_dispatch] # Menambahkan tombol manual
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-13 # Mengunci ke versi Intel Mac agar lebih stabil untuk distribusi
     steps:
     - uses: actions/checkout@v3
+    
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
+        python-version: '3.11' # Versi yang sangat stabil untuk PyInstaller
+        
     - name: Install Dependencies
-      run: pip install pyinstaller midiutil
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install pyinstaller midiutil
+        
     - name: Build Mac App
-      run: python3 -m PyInstaller --windowed --onefile --name "Type_Text_To_Midi" type_text_to_midi_pro.py
+      run: |
+        python3 -m PyInstaller --windowed --onefile --name "Type_Text_To_Midi" type_text_to_midi_pro.py
+        
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: Mac-App-Download
+        name: Mac-App-Result
         path: dist/Type_Text_To_Midi.app
